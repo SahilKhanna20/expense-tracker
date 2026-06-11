@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import ExpenseForm from "./components/ExpressForm";
 import ExpenseList from "./components/ExpressList";
+import SummaryPanel from "./components/SummaryPanel";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -40,6 +41,8 @@ function App() {
             filtering will be added in upcoming stages.
           </p>
         </header>
+
+        <SummaryPanel expenses={expenses} />
 
         <section className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
           <ExpenseForm onExpenseAdded={fetchExpenses} />

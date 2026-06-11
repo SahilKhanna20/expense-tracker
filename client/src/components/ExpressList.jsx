@@ -1,3 +1,5 @@
+import { currencyFormatter } from "./SummaryPanel";
+
 function ExpenseList({ expenses, isLoading, error }) {
   if (isLoading) {
     return (
@@ -41,7 +43,7 @@ function ExpenseList({ expenses, isLoading, error }) {
                     {expense.category}
                   </td>
                   <td className="px-4 py-3 font-medium text-slate-950">
-                    {expense.amount}
+                    {currencyFormatter.format(Number(expense.amount))}
                   </td>
                   <td className="px-4 py-3 text-slate-700">
                     {expense.note || "-"}
