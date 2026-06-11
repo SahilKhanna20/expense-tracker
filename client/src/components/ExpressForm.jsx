@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-function ExpenseForm() {
+function ExpenseForm({ onExpenseAdded }) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
@@ -30,6 +30,7 @@ function ExpenseForm() {
       setDate("");
       setNote("");
       setMessage("Expense added successfully.");
+      onExpenseAdded();
     } catch (err) {
       if (!err.response) {
         setError("Backend is not reachable. Please start the server on port 5000.");

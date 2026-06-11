@@ -1,6 +1,30 @@
+import { useEffect, useState } from "react";
+import axios from "axios";
 import ExpenseForm from "./components/ExpressForm";
+import ExpenseList from "./components/ExpressList";
 
 function App() {
+  const [expenses, setExpenses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const fetchExpenses = async () => {
+    setError("");
+
+    try {
+      const response = await axios.get("http://localhost:5000/api/expenses");
+      setExpenses(response.data);
+    } catch {
+      setError("Could not load expenses. Please check that the backend is running.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchExpenses();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
       <main className="mx-auto flex max-w-5xl flex-col gap-8">
@@ -18,17 +42,12 @@ function App() {
         </header>
 
         <section className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
-          <ExpenseForm />
-
-          <div className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-            <h2 className="text-lg font-semibold text-slate-950">
-              Expenses
-            </h2>
-            <p className="mt-2 text-sm text-slate-600">
-              Expense records will appear here after the frontend is connected
-              to the backend API.
-            </p>
-          </div>
+          <ExpenseForm onExpenseAdded={fetchExpenses} />
+          <ExpenseList
+            error={error}
+            expenses={expenses}
+            isLoading={isLoading}
+          />
         </section>
       </main>
     </div>

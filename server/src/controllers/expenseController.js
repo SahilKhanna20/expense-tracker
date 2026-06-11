@@ -1,7 +1,11 @@
 const expenses = require("../data/expenses");
 
 const getExpenses = (req, res) => {
-  res.json(expenses);
+  const sortedExpenses = [...expenses].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
+
+  res.json(sortedExpenses);
 };
 
 const addExpense = (req, res) => {
