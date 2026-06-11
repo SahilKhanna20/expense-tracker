@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ExpenseForm from "./components/ExpressForm";
+import ExpenseFilters from "./components/ExpenseFilters";
 import ExpenseList from "./components/ExpressList";
 import SummaryPanel from "./components/SummaryPanel";
+import CategoryChart from "./components/CategoryChart";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [editingExpense, setEditingExpense] = useState(null);
+  const [filters, setFilters] = useState({
+    category: "",
+    startDate: "",
+    endDate: "",
+  });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -58,6 +65,22 @@ function App() {
     handleExpenseSaved();
   };
 
+  const visibleExpenses = expenses.filter((expense) => {
+    if (filters.category && expense.category !== filters.category) {
+      return false;
+    }
+
+    if (filters.startDate && expense.date < filters.startDate) {
+      return false;
+    }
+
+    if (filters.endDate && expense.date > filters.endDate) {
+      return false;
+    }
+
+    return true;
+  });
+
   return (
     <div className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
       <main className="mx-auto flex max-w-5xl flex-col gap-8">
@@ -75,6 +98,8 @@ function App() {
 
         <SummaryPanel expenses={expenses} />
 
+        <CategoryChart expenses={expenses} />
+
         <section className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
           <ExpenseForm
             editingExpense={editingExpense}
@@ -82,13 +107,20 @@ function App() {
             onExpenseAdded={handleExpenseSaved}
             onExpenseUpdated={handleUpdateExpense}
           />
-          <ExpenseList
-            onEditExpense={setEditingExpense}
-            onDeleteExpense={handleDeleteExpense}
-            error={error}
-            expenses={expenses}
-            isLoading={isLoading}
-          />
+
+          <div className="flex flex-col gap-6">
+            <ExpenseFilters filters={filters} onFiltersChange={setFilters} />
+            <ExpenseList
+              onEditExpense={setEditingExpense}
+              onDeleteExpense={handleDeleteExpense}
+              error={error}
+              expenses={visibleExpenses}
+              hasFilters={Boolean(
+                filters.category || filters.startDate || filters.endDate
+              )}
+              isLoading={isLoading}
+            />
+          </div>
         </section>
       </main>
     </div>

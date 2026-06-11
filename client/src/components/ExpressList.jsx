@@ -4,6 +4,7 @@ function ExpenseList({
   expenses,
   isLoading,
   error,
+  hasFilters,
   onEditExpense,
   onDeleteExpense,
 }) {
@@ -26,7 +27,9 @@ function ExpenseList({
 
       {!error && expenses.length === 0 && (
         <p className="mt-2 text-sm text-slate-600">
-          No expenses added yet. Use the form to log your first expense.
+          {hasFilters
+            ? "No expenses match the selected filters."
+            : "No expenses added yet. Use the form to log your first expense."}
         </p>
       )}
 
@@ -64,13 +67,13 @@ function ExpenseList({
                       >
                         Edit
                       </button>
-                    <button
-                      className="rounded-md border border-red-200 px-3 py-1 font-medium text-red-700 transition hover:bg-red-50"
-                      onClick={() => onDeleteExpense(expense.id)}
-                      type="button"
-                    >
-                      Delete
-                    </button>
+                      <button
+                        className="rounded-md border border-red-200 px-3 py-1 font-medium text-red-700 transition hover:bg-red-50"
+                        onClick={() => onDeleteExpense(expense.id)}
+                        type="button"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </td>
                 </tr>
