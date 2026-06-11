@@ -20,3 +20,6 @@ client/dist
 
 # SQLite database (later)
 *.db
+
+postman
+.postman
