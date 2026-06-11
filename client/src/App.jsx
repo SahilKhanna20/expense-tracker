@@ -5,6 +5,9 @@ import ExpenseFilters from "./components/ExpenseFilters";
 import ExpenseList from "./components/ExpenseList";
 import SummaryPanel from "./components/SummaryPanel";
 import CategoryChart from "./components/CategoryChart";
+import BudgetSettings from "./components/BudgetSettings";
+import BudgetStatus from "./components/BudgetStatus";
+import useCategoryBudgets from "./hooks/useCategoryBudgets";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -16,6 +19,7 @@ function App() {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const { budgets, setBudgets } = useCategoryBudgets();
 
   const fetchExpenses = async () => {
     setError("");
@@ -98,15 +102,21 @@ function App() {
 
         <SummaryPanel expenses={expenses} />
 
+        <BudgetStatus budgets={budgets} expenses={expenses} />
+
         <CategoryChart expenses={expenses} />
 
         <section className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
-          <ExpenseForm
-            editingExpense={editingExpense}
-            onCancelEdit={() => setEditingExpense(null)}
-            onExpenseAdded={handleExpenseSaved}
-            onExpenseUpdated={handleUpdateExpense}
-          />
+          <div className="flex flex-col gap-6">
+            <ExpenseForm
+              editingExpense={editingExpense}
+              onCancelEdit={() => setEditingExpense(null)}
+              onExpenseAdded={handleExpenseSaved}
+              onExpenseUpdated={handleUpdateExpense}
+            />
+
+            <BudgetSettings budgets={budgets} onBudgetsChange={setBudgets} />
+          </div>
 
           <div className="flex flex-col gap-6">
             <ExpenseFilters filters={filters} onFiltersChange={setFilters} />
