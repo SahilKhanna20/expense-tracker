@@ -1,4 +1,5 @@
 import { currencyFormatter } from "./SummaryPanel";
+import exportExpensesToCsv from "../utils/exportExpensesCsv";
 
 function ExpenseList({
   expenses,
@@ -17,9 +18,24 @@ function ExpenseList({
     );
   }
 
+  const handleExportCsv = () => {
+    exportExpensesToCsv(expenses);
+  };
+
   return (
     <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-950">Expenses</h2>
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-lg font-semibold text-slate-950">Expenses</h2>
+
+        <button
+          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400"
+          disabled={expenses.length === 0}
+          onClick={handleExportCsv}
+          type="button"
+        >
+          Export CSV
+        </button>
+      </div>
 
       {error && (
         <p className="mt-2 text-sm font-medium text-red-700">{error}</p>
