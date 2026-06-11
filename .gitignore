@@ -18,8 +18,8 @@ Thumbs.db
 # Vite
 client/dist
 
-# SQLite database (later)
-*.db
+# SQLite database
+server/expenses.db
 
 postman
 .postman

@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+require("./src/db/database");
 const expenseRoutes = require("./src/routes/expenseRoutes");
 
 const app = express();

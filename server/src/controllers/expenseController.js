@@ -1,4 +1,4 @@
-const expenses = require("../data/expenses");
+const expenseRepository = require("../db/expenseRepository");
 
 const validateExpense = ({ amount, category, date }) => {
   if (!amount || amount <= 0) {
@@ -24,11 +24,9 @@ const validateExpense = ({ amount, category, date }) => {
 };
 
 const getExpenses = (req, res) => {
-  const sortedExpenses = [...expenses].sort(
-    (a, b) => new Date(b.date) - new Date(a.date)
-  );
+  const expenses = expenseRepository.getAllExpenses();
 
-  res.json(sortedExpenses);
+  res.json(expenses);
 };
 
 const addExpense = (req, res) => {
@@ -41,7 +39,7 @@ const addExpense = (req, res) => {
       error: validationError,
     });
   }
-  
+
   const newExpense = {
     id: Date.now(),
     amount,
@@ -51,16 +49,16 @@ const addExpense = (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
-  expenses.push(newExpense);
+  expenseRepository.createExpense(newExpense);
 
   res.status(201).json(newExpense);
 };
 
 const updateExpense = (req, res) => {
   const expenseId = Number(req.params.id);
-  const expense = expenses.find((item) => item.id === expenseId);
+  const existingExpense = expenseRepository.getExpenseById(expenseId);
 
-  if (!expense) {
+  if (!existingExpense) {
     return res.status(404).json({
       error: "Expense not found",
     });
@@ -75,25 +73,25 @@ const updateExpense = (req, res) => {
     });
   }
 
-  expense.amount = amount;
-  expense.category = category;
-  expense.date = date;
-  expense.note = note || "";
+  const updatedExpense = expenseRepository.updateExpense(expenseId, {
+    amount,
+    category,
+    date,
+    note: note || "",
+  });
 
-  res.json(expense);
+  res.json(updatedExpense);
 };
 
 const deleteExpense = (req, res) => {
   const expenseId = Number(req.params.id);
-  const expenseIndex = expenses.findIndex((expense) => expense.id === expenseId);
+  const wasDeleted = expenseRepository.deleteExpense(expenseId);
 
-  if (expenseIndex === -1) {
+  if (!wasDeleted) {
     return res.status(404).json({
       error: "Expense not found",
     });
   }
-
-  expenses.splice(expenseIndex, 1);
 
   res.status(204).send();
 };
