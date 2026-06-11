@@ -1,6 +1,33 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const getTodayDateString = () => new Date().toISOString().split("T")[0];
+
+const validateExpenseForm = ({ amount, category, date }) => {
+  const parsedAmount = Number(amount);
+
+  if (!amount || Number.isNaN(parsedAmount) || parsedAmount <= 0) {
+    return "Amount must be greater than zero";
+  }
+
+  if (!category) {
+    return "Category is required";
+  }
+
+  if (!date) {
+    return "Date is required";
+  }
+
+  const selectedDate = new Date(date);
+  const today = new Date();
+
+  if (selectedDate > today) {
+    return "Future dates are not allowed";
+  }
+
+  return "";
+};
+
 function ExpenseForm({
   editingExpense,
   onCancelEdit,
@@ -41,6 +68,14 @@ function ExpenseForm({
 
     setMessage("");
     setError("");
+
+    const validationError = validateExpenseForm({ amount, category, date });
+
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -94,8 +129,10 @@ function ExpenseForm({
           Amount
           <input
             className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
-            type="number"
+            min="0.01"
             placeholder="0.00"
+            step="0.01"
+            type="number"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
@@ -121,6 +158,7 @@ function ExpenseForm({
           Date
           <input
             className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            max={getTodayDateString()}
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}

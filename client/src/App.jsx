@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import ExpenseForm from "./components/ExpressForm";
+import ExpenseForm from "./components/ExpenseForm";
 import ExpenseFilters from "./components/ExpenseFilters";
-import ExpenseList from "./components/ExpressList";
+import ExpenseList from "./components/ExpenseList";
 import SummaryPanel from "./components/SummaryPanel";
 import CategoryChart from "./components/CategoryChart";
 
