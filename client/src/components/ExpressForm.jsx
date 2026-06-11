@@ -1,20 +1,45 @@
 import { useState } from "react";
+import axios from "axios";
 
 function ExpenseForm() {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log({
-      amount,
-      category,
-      date,
-      note,
-    });
+    setMessage("");
+    setError("");
+    setIsSubmitting(true);
+
+    try {
+      await axios.post("http://localhost:5000/api/expenses", {
+        amount: Number(amount),
+        category,
+        date,
+        note,
+      });
+
+      setAmount("");
+      setCategory("");
+      setDate("");
+      setNote("");
+      setMessage("Expense added successfully.");
+    } catch (err) {
+      if (!err.response) {
+        setError("Backend is not reachable. Please start the server on port 5000.");
+        return;
+      }
+
+      setError(err.response.data?.error || "Could not add expense.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -74,11 +99,20 @@ function ExpenseForm() {
         </label>
 
         <button
-          className="rounded-md bg-teal-700 px-4 py-2 font-medium text-white transition hover:bg-teal-800"
+          className="rounded-md bg-teal-700 px-4 py-2 font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+          disabled={isSubmitting}
           type="submit"
         >
-          Add Expense
+          {isSubmitting ? "Adding..." : "Add Expense"}
         </button>
+
+        {message && (
+          <p className="text-sm font-medium text-emerald-700">{message}</p>
+        )}
+
+        {error && (
+          <p className="text-sm font-medium text-red-700">{error}</p>
+        )}
       </div>
     </form>
   );
