@@ -6,6 +6,7 @@ import SummaryPanel from "./components/SummaryPanel";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
+  const [editingExpense, setEditingExpense] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -26,6 +27,37 @@ function App() {
     fetchExpenses();
   }, []);
 
+  const handleDeleteExpense = async (expenseId) => {
+    const shouldDelete = window.confirm(
+      "Are you sure you want to delete this expense?"
+    );
+
+    if (!shouldDelete) {
+      return;
+    }
+
+    try {
+      await axios.delete(`http://localhost:5000/api/expenses/${expenseId}`);
+      fetchExpenses();
+    } catch {
+      setError("Could not delete expense. Please try again.");
+    }
+  };
+
+  const handleExpenseSaved = () => {
+    setEditingExpense(null);
+    fetchExpenses();
+  };
+
+  const handleUpdateExpense = async (expenseId, expenseData) => {
+    await axios.put(
+      `http://localhost:5000/api/expenses/${expenseId}`,
+      expenseData
+    );
+
+    handleExpenseSaved();
+  };
+
   return (
     <div className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
       <main className="mx-auto flex max-w-5xl flex-col gap-8">
@@ -37,16 +69,22 @@ function App() {
             Track daily spending
           </h1>
           <p className="mt-2 max-w-2xl text-slate-600">
-            Add expenses by amount, category, date, and note. Summary and
-            filtering will be added in upcoming stages.
+            Add expenses by amount, category, date, and note.
           </p>
         </header>
 
         <SummaryPanel expenses={expenses} />
 
         <section className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
-          <ExpenseForm onExpenseAdded={fetchExpenses} />
+          <ExpenseForm
+            editingExpense={editingExpense}
+            onCancelEdit={() => setEditingExpense(null)}
+            onExpenseAdded={handleExpenseSaved}
+            onExpenseUpdated={handleUpdateExpense}
+          />
           <ExpenseList
+            onEditExpense={setEditingExpense}
+            onDeleteExpense={handleDeleteExpense}
             error={error}
             expenses={expenses}
             isLoading={isLoading}

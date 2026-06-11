@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
-function ExpenseForm({ onExpenseAdded }) {
+function ExpenseForm({
+  editingExpense,
+  onCancelEdit,
+  onExpenseAdded,
+  onExpenseUpdated,
+}) {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [date, setDate] = useState("");
@@ -9,6 +14,27 @@ function ExpenseForm({ onExpenseAdded }) {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isEditing = Boolean(editingExpense);
+
+  const resetForm = () => {
+    setAmount("");
+    setCategory("");
+    setDate("");
+    setNote("");
+  };
+
+  useEffect(() => {
+    if (!editingExpense) {
+      return;
+    }
+
+    setAmount(String(editingExpense.amount));
+    setCategory(editingExpense.category);
+    setDate(editingExpense.date);
+    setNote(editingExpense.note);
+    setMessage("");
+    setError("");
+  }, [editingExpense]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,29 +44,40 @@ function ExpenseForm({ onExpenseAdded }) {
     setIsSubmitting(true);
 
     try {
-      await axios.post("http://localhost:5000/api/expenses", {
+      const expenseData = {
         amount: Number(amount),
         category,
         date,
         note,
-      });
+      };
 
-      setAmount("");
-      setCategory("");
-      setDate("");
-      setNote("");
-      setMessage("Expense added successfully.");
-      onExpenseAdded();
+      if (isEditing) {
+        await onExpenseUpdated(editingExpense.id, expenseData);
+        setMessage("Expense updated successfully.");
+      } else {
+        await axios.post("http://localhost:5000/api/expenses", expenseData);
+        onExpenseAdded();
+        setMessage("Expense added successfully.");
+      }
+
+      resetForm();
     } catch (err) {
       if (!err.response) {
         setError("Backend is not reachable. Please start the server on port 5000.");
         return;
       }
 
-      setError(err.response.data?.error || "Could not add expense.");
+      setError(err.response.data?.error || "Could not save expense.");
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleCancelEdit = () => {
+    resetForm();
+    setMessage("");
+    setError("");
+    onCancelEdit();
   };
 
   return (
@@ -48,7 +85,9 @@ function ExpenseForm({ onExpenseAdded }) {
       className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
       onSubmit={handleSubmit}
     >
-      <h2 className="text-lg font-semibold text-slate-950">Add Expense</h2>
+      <h2 className="text-lg font-semibold text-slate-950">
+        {isEditing ? "Edit Expense" : "Add Expense"}
+      </h2>
 
       <div className="mt-5 flex flex-col gap-4">
         <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
@@ -104,8 +143,22 @@ function ExpenseForm({ onExpenseAdded }) {
           disabled={isSubmitting}
           type="submit"
         >
-          {isSubmitting ? "Adding..." : "Add Expense"}
+          {isSubmitting
+            ? "Saving..."
+            : isEditing
+              ? "Save Changes"
+              : "Add Expense"}
         </button>
+
+        {isEditing && (
+          <button
+            className="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-50"
+            onClick={handleCancelEdit}
+            type="button"
+          >
+            Cancel
+          </button>
+        )}
 
         {message && (
           <p className="text-sm font-medium text-emerald-700">{message}</p>

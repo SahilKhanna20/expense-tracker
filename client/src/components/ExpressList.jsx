@@ -1,6 +1,12 @@
 import { currencyFormatter } from "./SummaryPanel";
 
-function ExpenseList({ expenses, isLoading, error }) {
+function ExpenseList({
+  expenses,
+  isLoading,
+  error,
+  onEditExpense,
+  onDeleteExpense,
+}) {
   if (isLoading) {
     return (
       <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
@@ -33,6 +39,7 @@ function ExpenseList({ expenses, isLoading, error }) {
                 <th className="px-4 py-3 font-medium">Category</th>
                 <th className="px-4 py-3 font-medium">Amount</th>
                 <th className="px-4 py-3 font-medium">Note</th>
+                <th className="px-4 py-3 font-medium">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-200">
@@ -47,6 +54,24 @@ function ExpenseList({ expenses, isLoading, error }) {
                   </td>
                   <td className="px-4 py-3 text-slate-700">
                     {expense.note || "-"}
+                  </td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        className="rounded-md border border-slate-300 px-3 py-1 font-medium text-slate-700 transition hover:bg-slate-50"
+                        onClick={() => onEditExpense(expense)}
+                        type="button"
+                      >
+                        Edit
+                      </button>
+                    <button
+                      className="rounded-md border border-red-200 px-3 py-1 font-medium text-red-700 transition hover:bg-red-50"
+                      onClick={() => onDeleteExpense(expense.id)}
+                      type="button"
+                    >
+                      Delete
+                    </button>
+                    </div>
                   </td>
                 </tr>
               ))}
