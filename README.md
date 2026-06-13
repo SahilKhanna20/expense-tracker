@@ -1,6 +1,6 @@
 # Expense Tracker
 
-A full-stack personal finance web app . Users can log, edit, and delete daily expenses, filter by category and date range, view spending summaries and charts, set monthly category budgets, and export data as CSV. The backend exposes a REST API backed by SQLite; the frontend is a React SPA styled with Tailwind CSS.
+A full-stack personal finance web app. Users can log, edit, and delete daily expenses, filter by category and date range, view spending summaries and charts, set monthly category budgets, and export data as CSV. The backend exposes a REST API backed by SQLite; the frontend is a React SPA styled with Tailwind CSS.
 
 ---
 
@@ -11,7 +11,7 @@ A full-stack personal finance web app . Users can log, edit, and delete daily ex
 | **Frontend** | https://expensetracker0101.netlify.app/ |
 | **Backend API** | https://expense-tracker-e5g9.onrender.com |
 
-> **Note:** The backend runs on Render's free tier — the first request after inactivity may take approx. 30s (cold start). SQLite data resets on each redeploy; used just for the demo version.
+> **Note:** The backend runs on Render's free tier — the first request after inactivity may take approx 30s (cold start). SQLite data resets on each redeploy; used only for the demo.
 
 ---
 
@@ -27,6 +27,7 @@ A full-stack personal finance web app . Users can log, edit, and delete daily ex
 | Backend framework | Express 5 | Minimal, well-understood REST API setup |
 | Database | better-sqlite3 | Zero-config embedded SQL; no separate DB process needed |
 | Dev server | Nodemon | Auto-restarts server on file change |
+| Testing | Jest + Supertest | Integration tests against in-memory SQLite |
 
 ---
 
@@ -141,6 +142,24 @@ Deletes an expense.
 
 ---
 
+## Running Tests
+
+Integration tests use [Jest](https://jestjs.io/) and [Supertest](https://github.com/ladjs/supertest) against an in-memory SQLite database — no setup required.
+
+```bash
+cd server
+npm test
+```
+
+5 tests across 2 suites:
+
+| Suite | What it covers |
+|---|---|
+| `POST /api/expenses` | 201 on valid input; 400 for missing amount, missing category, future date |
+| `DELETE /api/expenses/:id` | 404 for unknown ID |
+
+---
+
 ## Project Structure
 
 ```
@@ -160,7 +179,8 @@ expense-tracker/
     │   ├── db/
     │   │   ├── database.js  # SQLite connection + schema creation
     │   │   └── expenseRepository.js  # SQL queries (CRUD)
-    │   └── routes/          # expenseRoutes.js — maps HTTP verbs to controllers
+    │   ├── routes/          # expenseRoutes.js — maps HTTP verbs to controllers
+│   └── tests/           # expenses.test.js — Jest + Supertest integration tests
     ├── index.js             # Express app entry point
     └── package.json
 ```
