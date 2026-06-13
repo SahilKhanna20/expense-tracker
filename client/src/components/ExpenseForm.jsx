@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../api/config";
 
 const getTodayDateString = () => new Date().toISOString().split("T")[0];
 
@@ -93,7 +94,7 @@ function ExpenseForm({
         await onExpenseUpdated(editingExpense.id, expenseData);
         setMessage("Expense updated successfully.");
       } else {
-        await axios.post("http://localhost:5000/api/expenses", expenseData);
+        await axios.post(`${API_BASE_URL}/api/expenses`, expenseData);
         onExpenseAdded();
         setMessage("Expense added successfully.");
       }
