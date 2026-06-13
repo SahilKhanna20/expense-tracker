@@ -11,7 +11,7 @@ A full-stack personal finance web app . Users can log, edit, and delete daily ex
 | **Frontend** | https://expensetracker0101.netlify.app/ |
 | **Backend API** | https://expense-tracker-e5g9.onrender.com |
 
-> **Note:** The backend runs on Render's free tier — the first request after inactivity may take ~30s (cold start). SQLite data resets on each redeploy; this is expected for a demo.
+> **Note:** The backend runs on Render's free tier — the first request after inactivity may take approx. 30s (cold start). SQLite data resets on each redeploy; used just for the demo version.
 
 ---
 
