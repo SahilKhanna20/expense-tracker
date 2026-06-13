@@ -10,6 +10,7 @@ import BudgetSettings from "./components/BudgetSettings";
 import BudgetStatus from "./components/BudgetStatus";
 import useCategoryBudgets from "./hooks/useCategoryBudgets";
 import exportExpensesToCsv from "./utils/exportExpensesCsv";
+import { getCurrentMonth, isExpenseInMonth } from "./utils/monthUtils";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -18,6 +19,7 @@ function App() {
     category: "",
     startDate: "",
     endDate: "",
+    month: getCurrentMonth(),
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
@@ -72,6 +74,10 @@ function App() {
   };
 
   const visibleExpenses = expenses.filter((expense) => {
+    if (filters.month && !isExpenseInMonth(expense, filters.month)) {
+      return false;
+    }
+
     if (filters.category && expense.category !== filters.category) {
       return false;
     }
@@ -87,10 +93,43 @@ function App() {
     return true;
   });
 
+  const monthExpenses = expenses.filter((expense) =>
+    isExpenseInMonth(expense, filters.month)
+  );
+
   return (
     <div className="min-h-screen bg-page text-primary">
       <header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 lg:px-6">
         <span className="text-lg font-semibold text-primary">Expense Tracker</span>
+        <input
+          id="month"
+          type="month"
+          max={getCurrentMonth()}
+          value={filters.month}
+          onChange={(e) =>
+            setFilters({
+              ...filters,
+              month: e.target.value,
+            })
+          }
+          className="
+            rounded-lg
+            border
+            border-slate-300
+            bg-white
+            px-4
+            py-2
+            text-sm
+            font-medium
+            text-slate-700
+            shadow-sm
+            transition
+            focus:border-teal-500
+            focus:outline-none
+            focus:ring-2
+            focus:ring-teal-100
+          "
+        />
         <button
           className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-gray-700 hover:shadow-sm disabled:cursor-not-allowed disabled:text-gray-400"
           disabled={visibleExpenses.length === 0}
@@ -100,6 +139,7 @@ function App() {
           Export CSV
         </button>
       </header>
+    
       <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
         <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
           <div className="flex flex-col gap-6">
@@ -112,9 +152,9 @@ function App() {
             <BudgetSettings budgets={budgets} onBudgetsChange={setBudgets} />
           </div>
           <div className="flex flex-col gap-6">
-            <SummaryPanel expenses={expenses} />
-            <BudgetStatus budgets={budgets} expenses={expenses} />
-            <CategoryChart expenses={expenses} />
+            <SummaryPanel expenses={monthExpenses} selectedMonth={filters.month} />
+            <BudgetStatus budgets={budgets} expenses={monthExpenses} />
+            <CategoryChart expenses={monthExpenses} />
             <ExpenseFilters filters={filters} onFiltersChange={setFilters} />
             <ExpenseList
               onEditExpense={setEditingExpense}
@@ -122,7 +162,10 @@ function App() {
               error={error}
               expenses={visibleExpenses}
               hasFilters={Boolean(
-                filters.category || filters.startDate || filters.endDate
+                filters.category ||
+                  filters.startDate ||
+                  filters.endDate ||
+                  filters.month !== getCurrentMonth()
               )}
               isLoading={isLoading}
             />

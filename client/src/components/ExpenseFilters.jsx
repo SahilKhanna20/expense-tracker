@@ -1,3 +1,5 @@
+import { getCurrentMonth } from "../utils/monthUtils";
+
 const categories = ["Food", "Transport", "Bills", "Entertainment", "Other"];
 
 const fieldClassName =
@@ -16,6 +18,7 @@ function ExpenseFilters({ filters, onFiltersChange }) {
       category: "",
       startDate: "",
       endDate: "",
+      month: getCurrentMonth(),
     });
   };
 
@@ -35,7 +38,8 @@ function ExpenseFilters({ filters, onFiltersChange }) {
         </button>
       </div>
 
-      <div className="mt-5 grid gap-4 md:grid-cols-3">
+      <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+
         <label className="block text-sm font-medium text-gray-700">
           <span className="mb-1 block">Category</span>
           <select

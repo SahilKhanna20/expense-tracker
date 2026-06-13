@@ -1,20 +1,7 @@
 import { currencyFormatter } from "./SummaryPanel";
 
-function getThisMonthTotalsByCategory(expenses) {
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-
+function getMonthTotalsByCategory(expenses) {
   return expenses.reduce((totals, expense) => {
-    const expenseDate = new Date(expense.date);
-
-    if (
-      expenseDate.getMonth() !== currentMonth ||
-      expenseDate.getFullYear() !== currentYear
-    ) {
-      return totals;
-    }
-
     totals[expense.category] =
       (totals[expense.category] || 0) + Number(expense.amount);
 
@@ -45,7 +32,7 @@ function BudgetStatus({ expenses, budgets }) {
     return null;
   }
 
-  const spentThisMonthByCategory = getThisMonthTotalsByCategory(expenses);
+  const spentByCategory = getMonthTotalsByCategory(expenses);
 
   return (
     <section className="rounded-xl border border-gray-200 bg-white p-6">
@@ -58,7 +45,7 @@ function BudgetStatus({ expenses, budgets }) {
 
       <ul className="mt-5 space-y-4">
         {categoriesWithBudgets.map(([category, budget]) => {
-          const spent = spentThisMonthByCategory[category] || 0;
+          const spent = spentByCategory[category] || 0;
           const isOverBudget = spent > budget;
           const usagePercent = Math.min((spent / budget) * 100, 100);
 
