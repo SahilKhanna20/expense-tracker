@@ -26,7 +26,7 @@ function ExpenseList({
       </h2>
 
       {error && (
-        <p className="mt-2 text-sm font-medium text-danger">{error}</p>
+        <p className="mt-2 text-sm font-medium text-red-500">{error}</p>
       )}
 
       {!error && expenses.length === 0 && (
@@ -38,62 +38,83 @@ function ExpenseList({
       )}
 
       {!error && expenses.length > 0 && (
-        <div className="mt-5 overflow-hidden rounded-lg border border-gray-200">
-          <table className="w-full border-collapse text-left text-sm">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
-                  Date
-                </th>
-                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
-                  Category
-                </th>
-                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
-                  Amount
-                </th>
-                <th className="hidden px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500 sm:table-cell">
-                  Note
-                </th>
-                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {expenses.map((expense) => (
-                <tr key={expense.id}>
-                  <td className="px-4 py-3 text-gray-600">{expense.date}</td>
-                  <td className="px-4 py-3 text-gray-600">
-                    {expense.category}
-                  </td>
-                  <td className="px-4 py-3 font-medium tabular-nums text-gray-900">
-                    {currencyFormatter.format(Number(expense.amount))}
-                  </td>
-                  <td className="hidden px-4 py-3 text-gray-600 sm:table-cell">
-                    {expense.note || "-"}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <button
-                        className="text-sm font-medium text-blue-600 hover:underline"
-                        onClick={() => onEditExpense(expense)}
-                        type="button"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="text-sm font-medium text-red-500 hover:underline"
-                        onClick={() => onDeleteExpense(expense.id)}
-                        type="button"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </td>
+        <div className="mt-5">
+          <div className="mb-2 text-xs text-gray-500 md:hidden">
+            ← Swipe to view more →
+          </div>
+
+          <div className="max-w-full overflow-x-auto rounded-lg border border-gray-200">
+            <table className="min-w-[950px] border-collapse text-left text-sm">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500 whitespace-nowrap">
+                    Date
+                  </th>
+
+                  <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500 whitespace-nowrap">
+                    Category
+                  </th>
+
+                  <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500 whitespace-nowrap">
+                    Amount
+                  </th>
+
+                  <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
+                    Note
+                  </th>
+
+                  <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500 whitespace-nowrap">
+                    Actions
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+
+              <tbody className="divide-y divide-gray-100">
+                {expenses.map((expense) => (
+                  <tr
+                    key={expense.id}
+                    className="transition-colors hover:bg-gray-50"
+                  >
+                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                      {expense.date}
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
+                      {expense.category}
+                    </td>
+
+                    <td className="px-4 py-3 font-medium tabular-nums text-gray-900 whitespace-nowrap">
+                      {currencyFormatter.format(Number(expense.amount))}
+                    </td>
+
+                    <td className="w-[250px] px-4 py-3 text-gray-600">
+                      {expense.note || "-"}
+                    </td>
+
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex items-center gap-3">
+                        <button
+                          type="button"
+                          onClick={() => onEditExpense(expense)}
+                          className="text-sm font-medium text-blue-600 hover:underline"
+                        >
+                          Edit
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => onDeleteExpense(expense.id)}
+                          className="text-sm font-medium text-red-500 hover:underline"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </section>

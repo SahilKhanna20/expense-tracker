@@ -149,9 +149,11 @@ function App() {
               onExpenseAdded={handleExpenseSaved}
               onExpenseUpdated={handleUpdateExpense}
             />
-            <BudgetSettings budgets={budgets} onBudgetsChange={setBudgets} />
+            <div className="hidden lg:block">
+              <BudgetSettings budgets={budgets} onBudgetsChange={setBudgets} />
+            </div>
           </div>
-          <div className="flex flex-col gap-6">
+          <div className="min-w-0 flex flex-col gap-6">
             <SummaryPanel expenses={monthExpenses} selectedMonth={filters.month} />
             <BudgetStatus budgets={budgets} expenses={monthExpenses} />
             <CategoryChart expenses={monthExpenses} />
@@ -169,6 +171,9 @@ function App() {
               )}
               isLoading={isLoading}
             />
+            <div className="lg:hidden">
+                <BudgetSettings budgets={budgets} onBudgetsChange={setBudgets} />
+            </div>
           </div>
         </div>
       </main>
