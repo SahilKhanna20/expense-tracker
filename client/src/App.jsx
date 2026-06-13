@@ -8,6 +8,7 @@ import CategoryChart from "./components/CategoryChart";
 import BudgetSettings from "./components/BudgetSettings";
 import BudgetStatus from "./components/BudgetStatus";
 import useCategoryBudgets from "./hooks/useCategoryBudgets";
+import exportExpensesToCsv from "./utils/exportExpensesCsv";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
@@ -86,27 +87,20 @@ function App() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-100 px-4 py-8 text-slate-900">
-      <main className="mx-auto flex max-w-5xl flex-col gap-8">
-        <header>
-          <p className="text-sm font-medium uppercase tracking-wide text-teal-700">
-            Mini Expense Tracker
-          </p>
-          <h1 className="mt-2 text-3xl font-bold text-slate-950">
-            Track daily spending
-          </h1>
-          <p className="mt-2 max-w-2xl text-slate-600">
-            Add expenses by amount, category, date, and note.
-          </p>
-        </header>
-
-        <SummaryPanel expenses={expenses} />
-
-        <BudgetStatus budgets={budgets} expenses={expenses} />
-
-        <CategoryChart expenses={expenses} />
-
-        <section className="grid gap-6 lg:grid-cols-[minmax(0,420px)_1fr]">
+    <div className="min-h-screen bg-page text-primary">
+      <header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 lg:px-6">
+        <span className="text-lg font-semibold text-primary">Expense Tracker</span>
+        <button
+          className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-gray-700 hover:shadow-sm disabled:cursor-not-allowed disabled:text-gray-400"
+          disabled={visibleExpenses.length === 0}
+          onClick={() => exportExpensesToCsv(visibleExpenses)}
+          type="button"
+        >
+          Export CSV
+        </button>
+      </header>
+      <main className="mx-auto max-w-7xl px-4 py-6 lg:px-6">
+        <div className="grid gap-6 lg:grid-cols-[340px_1fr]">
           <div className="flex flex-col gap-6">
             <ExpenseForm
               editingExpense={editingExpense}
@@ -114,11 +108,12 @@ function App() {
               onExpenseAdded={handleExpenseSaved}
               onExpenseUpdated={handleUpdateExpense}
             />
-
             <BudgetSettings budgets={budgets} onBudgetsChange={setBudgets} />
           </div>
-
           <div className="flex flex-col gap-6">
+            <SummaryPanel expenses={expenses} />
+            <BudgetStatus budgets={budgets} expenses={expenses} />
+            <CategoryChart expenses={expenses} />
             <ExpenseFilters filters={filters} onFiltersChange={setFilters} />
             <ExpenseList
               onEditExpense={setEditingExpense}
@@ -131,7 +126,7 @@ function App() {
               isLoading={isLoading}
             />
           </div>
-        </section>
+        </div>
       </main>
     </div>
   );

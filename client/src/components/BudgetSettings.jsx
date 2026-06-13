@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 
 const categories = ["Food", "Transport", "Bills", "Entertainment", "Other"];
 
+const inputClassName =
+  "h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-primary outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500";
+
 function BudgetSettings({ budgets, onBudgetsChange }) {
   const [draftBudgets, setDraftBudgets] = useState({});
 
@@ -36,21 +39,23 @@ function BudgetSettings({ budgets, onBudgetsChange }) {
   };
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-950">Category budgets</h2>
-      <p className="mt-1 text-sm text-slate-600">
+    <section className="rounded-xl border border-gray-200 bg-white p-6">
+      <h2 className="text-sm font-medium uppercase tracking-wide text-gray-700">
+        Category budgets
+      </h2>
+      <p className="mt-1 text-sm text-gray-600">
         Set a monthly spending limit per category.
       </p>
 
       <div className="mt-5 flex flex-col gap-4">
         {categories.map((category) => (
           <label
-            className="flex flex-col gap-1 text-sm font-medium text-slate-700"
+            className="block text-sm font-medium text-gray-700"
             key={category}
           >
-            {category}
+            <span className="mb-1 block">{category}</span>
             <input
-              className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+              className={inputClassName}
               min="0"
               placeholder="No budget"
               step="0.01"
@@ -62,7 +67,7 @@ function BudgetSettings({ budgets, onBudgetsChange }) {
         ))}
 
         <button
-          className="rounded-md bg-teal-700 px-4 py-2 font-medium text-white transition hover:bg-teal-800"
+          className="h-10 w-full rounded-lg bg-gray-900 text-sm font-medium text-white hover:bg-gray-800"
           onClick={handleSave}
           type="button"
         >

@@ -1,5 +1,8 @@
 const categories = ["Food", "Transport", "Bills", "Entertainment", "Other"];
 
+const fieldClassName =
+  "h-9 rounded-lg border border-gray-200 px-3 text-sm text-primary outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500";
+
 function ExpenseFilters({ filters, onFiltersChange }) {
   const updateFilter = (name, value) => {
     onFiltersChange({
@@ -17,17 +20,14 @@ function ExpenseFilters({ filters, onFiltersChange }) {
   };
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="rounded-xl border border-gray-200 bg-white p-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h2 className="text-lg font-semibold text-slate-950">Filters</h2>
-          <p className="mt-1 text-sm text-slate-600">
-            Narrow expenses by category or date range.
-          </p>
-        </div>
+        <h2 className="text-sm font-medium uppercase tracking-wide text-gray-700">
+          Filters
+        </h2>
 
         <button
-          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
+          className="text-sm text-gray-500 underline"
           onClick={clearFilters}
           type="button"
         >
@@ -36,10 +36,10 @@ function ExpenseFilters({ filters, onFiltersChange }) {
       </div>
 
       <div className="mt-5 grid gap-4 md:grid-cols-3">
-        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          Category
+        <label className="block text-sm font-medium text-gray-700">
+          <span className="mb-1 block">Category</span>
           <select
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className={`${fieldClassName} w-full`}
             value={filters.category}
             onChange={(e) => updateFilter("category", e.target.value)}
           >
@@ -52,20 +52,20 @@ function ExpenseFilters({ filters, onFiltersChange }) {
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          From
+        <label className="block text-sm font-medium text-gray-700">
+          <span className="mb-1 block">From</span>
           <input
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className={`${fieldClassName} w-full`}
             type="date"
             value={filters.startDate}
             onChange={(e) => updateFilter("startDate", e.target.value)}
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          To
+        <label className="block text-sm font-medium text-gray-700">
+          <span className="mb-1 block">To</span>
           <input
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className={`${fieldClassName} w-full`}
             type="date"
             value={filters.endDate}
             onChange={(e) => updateFilter("endDate", e.target.value)}

@@ -28,6 +28,9 @@ const validateExpenseForm = ({ amount, category, date }) => {
   return "";
 };
 
+const inputClassName =
+  "h-10 w-full rounded-lg border border-gray-200 px-3 text-sm text-primary outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500";
+
 function ExpenseForm({
   editingExpense,
   onCancelEdit,
@@ -117,18 +120,18 @@ function ExpenseForm({
 
   return (
     <form
-      className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm"
+      className="rounded-xl border border-gray-200 bg-white p-6"
       onSubmit={handleSubmit}
     >
-      <h2 className="text-lg font-semibold text-slate-950">
-        {isEditing ? "Edit Expense" : "Add Expense"}
+      <h2 className="text-base font-medium text-primary">
+        {isEditing ? "Edit expense" : "Add expense"}
       </h2>
 
       <div className="mt-5 flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          Amount
+        <label className="block text-sm font-medium text-gray-700">
+          <span className="mb-1 block">Amount</span>
           <input
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className={inputClassName}
             min="0.01"
             placeholder="0.00"
             step="0.01"
@@ -138,10 +141,10 @@ function ExpenseForm({
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          Category
+        <label className="block text-sm font-medium text-gray-700">
+          <span className="mb-1 block">Category</span>
           <select
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className={inputClassName}
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -154,10 +157,10 @@ function ExpenseForm({
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          Date
+        <label className="block text-sm font-medium text-gray-700">
+          <span className="mb-1 block">Date</span>
           <input
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className={inputClassName}
             max={getTodayDateString()}
             type="date"
             value={date}
@@ -165,10 +168,10 @@ function ExpenseForm({
           />
         </label>
 
-        <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
-          Note
+        <label className="block text-sm font-medium text-gray-700">
+          <span className="mb-1 block">Note</span>
           <input
-            className="rounded-md border border-slate-300 px-3 py-2 text-slate-950 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+            className={inputClassName}
             type="text"
             placeholder="Optional note"
             value={note}
@@ -177,7 +180,7 @@ function ExpenseForm({
         </label>
 
         <button
-          className="rounded-md bg-teal-700 px-4 py-2 font-medium text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="h-10 w-full rounded-lg bg-blue-600 text-sm font-medium text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
           disabled={isSubmitting}
           type="submit"
         >
@@ -190,7 +193,7 @@ function ExpenseForm({
 
         {isEditing && (
           <button
-            className="rounded-md border border-slate-300 px-4 py-2 font-medium text-slate-700 transition hover:bg-slate-50"
+            className="h-10 w-full rounded-lg border border-gray-200 text-sm font-medium text-gray-700 hover:shadow-sm"
             onClick={handleCancelEdit}
             type="button"
           >
@@ -199,11 +202,11 @@ function ExpenseForm({
         )}
 
         {message && (
-          <p className="text-sm font-medium text-emerald-700">{message}</p>
+          <p className="text-sm font-medium text-success">{message}</p>
         )}
 
         {error && (
-          <p className="text-sm font-medium text-red-700">{error}</p>
+          <p className="text-sm font-medium text-danger">{error}</p>
         )}
       </div>
     </form>

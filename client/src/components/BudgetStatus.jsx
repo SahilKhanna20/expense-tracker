@@ -22,6 +22,20 @@ function getThisMonthTotalsByCategory(expenses) {
   }, {});
 }
 
+const getProgressBarColor = (spent, budget) => {
+  const usagePercent = (spent / budget) * 100;
+
+  if (usagePercent >= 90) {
+    return "bg-[#DC2626]";
+  }
+
+  if (usagePercent >= 75) {
+    return "bg-[#F59E0B]";
+  }
+
+  return "bg-[#2563EB]";
+};
+
 function BudgetStatus({ expenses, budgets }) {
   const categoriesWithBudgets = Object.entries(budgets).filter(
     ([, budget]) => budget > 0
@@ -34,9 +48,11 @@ function BudgetStatus({ expenses, budgets }) {
   const spentThisMonthByCategory = getThisMonthTotalsByCategory(expenses);
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-950">Budget status</h2>
-      <p className="mt-1 text-sm text-slate-600">
+    <section className="rounded-xl border border-gray-200 bg-white p-6">
+      <h2 className="text-sm font-medium uppercase tracking-wide text-gray-700">
+        Budget status
+      </h2>
+      <p className="mt-1 text-sm text-gray-600">
         Monthly spending compared to your category budgets.
       </p>
 
@@ -49,30 +65,28 @@ function BudgetStatus({ expenses, budgets }) {
           return (
             <li key={category}>
               <div className="flex items-center justify-between gap-3 text-sm">
-                <span className="font-medium text-slate-800">{category}</span>
+                <span className="font-medium text-gray-800">{category}</span>
                 <span
-                  className={
+                  className={`tabular-nums ${
                     isOverBudget
-                      ? "font-medium text-red-700"
-                      : "text-slate-700"
-                  }
+                      ? "font-medium text-danger"
+                      : "text-gray-700"
+                  }`}
                 >
                   {currencyFormatter.format(spent)} /{" "}
                   {currencyFormatter.format(budget)}
                 </span>
               </div>
 
-              <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200">
+              <div className="mt-2 h-2 overflow-hidden rounded-full bg-gray-200">
                 <div
-                  className={`h-2 rounded-full ${
-                    isOverBudget ? "bg-red-600" : "bg-teal-600"
-                  }`}
+                  className={`h-2 rounded-full ${getProgressBarColor(spent, budget)}`}
                   style={{ width: `${usagePercent}%` }}
                 />
               </div>
 
               {isOverBudget && (
-                <p className="mt-2 text-sm font-medium text-red-700">
+                <p className="mt-2 text-sm font-medium text-danger">
                   Over budget by {currencyFormatter.format(spent - budget)}
                 </p>
               )}

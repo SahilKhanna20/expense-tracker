@@ -45,11 +45,11 @@ function CategoryChart({ expenses }) {
 
   if (chartData.length === 0) {
     return (
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-950">
-          Spending by category
+      <section className="rounded-xl border border-gray-200 bg-white p-6">
+        <h2 className="text-sm font-medium text-gray-700">
+          Spending overview
         </h2>
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-gray-600">
           Add expenses to see a category breakdown chart.
         </p>
       </section>
@@ -57,14 +57,12 @@ function CategoryChart({ expenses }) {
   }
 
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-slate-950">
-        Spending by category
-      </h2>
+    <section className="rounded-xl border border-gray-200 bg-white p-6">
+      <h2 className="text-sm font-medium text-gray-700">Spending overview</h2>
 
       <div className="mt-6 grid gap-8 lg:grid-cols-2">
         <div>
-          <h3 className="text-sm font-medium text-slate-600">
+          <h3 className="text-sm font-medium uppercase tracking-wide text-gray-700">
             Amount by category
           </h3>
           <div className="mt-4 h-72 w-full">
@@ -106,7 +104,7 @@ function CategoryChart({ expenses }) {
         </div>
 
         <div>
-          <h3 className="text-sm font-medium text-slate-600">
+          <h3 className="text-sm font-medium uppercase tracking-wide text-gray-700">
             Share of total spending
           </h3>
           <div className="mt-4 h-72 w-full">

@@ -1,5 +1,4 @@
 import { currencyFormatter } from "./SummaryPanel";
-import exportExpensesToCsv from "../utils/exportExpensesCsv";
 
 function ExpenseList({
   expenses,
@@ -11,38 +10,27 @@ function ExpenseList({
 }) {
   if (isLoading) {
     return (
-      <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-slate-950">Expenses</h2>
-        <p className="mt-2 text-sm text-slate-600">Loading expenses...</p>
+      <section className="rounded-xl border border-gray-200 bg-white p-6">
+        <h2 className="text-sm font-medium uppercase tracking-wide text-gray-700">
+          Expenses
+        </h2>
+        <p className="mt-2 text-sm text-gray-600">Loading expenses...</p>
       </section>
     );
   }
 
-  const handleExportCsv = () => {
-    exportExpensesToCsv(expenses);
-  };
-
   return (
-    <section className="rounded-lg border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <h2 className="text-lg font-semibold text-slate-950">Expenses</h2>
-
-        <button
-          className="rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400"
-          disabled={expenses.length === 0}
-          onClick={handleExportCsv}
-          type="button"
-        >
-          Export CSV
-        </button>
-      </div>
+    <section className="rounded-xl border border-gray-200 bg-white p-6">
+      <h2 className="text-sm font-medium uppercase tracking-wide text-gray-700">
+        Expenses
+      </h2>
 
       {error && (
-        <p className="mt-2 text-sm font-medium text-red-700">{error}</p>
+        <p className="mt-2 text-sm font-medium text-danger">{error}</p>
       )}
 
       {!error && expenses.length === 0 && (
-        <p className="mt-2 text-sm text-slate-600">
+        <p className="mt-2 text-sm text-gray-600">
           {hasFilters
             ? "No expenses match the selected filters."
             : "No expenses added yet. Use the form to log your first expense."}
@@ -50,41 +38,51 @@ function ExpenseList({
       )}
 
       {!error && expenses.length > 0 && (
-        <div className="mt-5 overflow-hidden rounded-md border border-slate-200">
+        <div className="mt-5 overflow-hidden rounded-lg border border-gray-200">
           <table className="w-full border-collapse text-left text-sm">
-            <thead className="bg-slate-50 text-slate-600">
+            <thead className="bg-gray-50">
               <tr>
-                <th className="px-4 py-3 font-medium">Date</th>
-                <th className="px-4 py-3 font-medium">Category</th>
-                <th className="px-4 py-3 font-medium">Amount</th>
-                <th className="px-4 py-3 font-medium">Note</th>
-                <th className="px-4 py-3 font-medium">Actions</th>
+                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
+                  Date
+                </th>
+                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
+                  Category
+                </th>
+                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
+                  Amount
+                </th>
+                <th className="hidden px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500 sm:table-cell">
+                  Note
+                </th>
+                <th className="px-4 py-3 text-xs font-normal uppercase tracking-wide text-gray-500">
+                  Actions
+                </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-gray-100">
               {expenses.map((expense) => (
                 <tr key={expense.id}>
-                  <td className="px-4 py-3 text-slate-700">{expense.date}</td>
-                  <td className="px-4 py-3 text-slate-700">
+                  <td className="px-4 py-3 text-gray-600">{expense.date}</td>
+                  <td className="px-4 py-3 text-gray-600">
                     {expense.category}
                   </td>
-                  <td className="px-4 py-3 font-medium text-slate-950">
+                  <td className="px-4 py-3 font-medium tabular-nums text-gray-900">
                     {currencyFormatter.format(Number(expense.amount))}
                   </td>
-                  <td className="px-4 py-3 text-slate-700">
+                  <td className="hidden px-4 py-3 text-gray-600 sm:table-cell">
                     {expense.note || "-"}
                   </td>
                   <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap items-center gap-3">
                       <button
-                        className="rounded-md border border-slate-300 px-3 py-1 font-medium text-slate-700 transition hover:bg-slate-50"
+                        className="text-sm font-medium text-blue-600 hover:underline"
                         onClick={() => onEditExpense(expense)}
                         type="button"
                       >
                         Edit
                       </button>
                       <button
-                        className="rounded-md border border-red-200 px-3 py-1 font-medium text-red-700 transition hover:bg-red-50"
+                        className="text-sm font-medium text-red-500 hover:underline"
                         onClick={() => onDeleteExpense(expense.id)}
                         type="button"
                       >
